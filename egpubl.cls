@@ -1282,7 +1282,7 @@ submitted to \textit{#1}%
  \let\subsectionmark=\EmptySubsectionmark
 }}
 % -------
-\def\LectureTitle{Visual Computing SoSe 2021}
+\def\LectureTitle{Visual Computing WS 2022 / 2023}
 \def\VisualComputing{%
 \noEGpagenumber%
 \copyrightTextTitPag{RheinMain University of Applied Sciences}
@@ -1291,7 +1291,7 @@ submitted to \textit{#1}%
 \def\@evenfoot{\mbox{}\hfill {\tiny\raisebox{\z@}[8pt][1pt]{\parbox[t]{18pc}{\sloppy\hfill\LectureTitle\\ \hspace*{\fill} RheinMain University of Applied Sciences}}}} 
 \gdef\ps@titlepage{\let\@mkboth\@gobbletwo
  \def\@oddhead{\raisebox{\z@}[8pt][1pt]{\parbox{\textwidth}{\small 
- \textsc{Visual Computing}   \hfill {\itshape SoSe 2021}}}}
+ \textsc{Visual Computing}   \hfill {\itshape WS 2022 / 2023}}}}
  \def\@oddfoot{{\tiny\raisebox{\z@}[8pt][1pt]{\parbox[t]{18pc}{\sloppy 
  \textsc{\LectureTitle}}}}\hfill}
  \let\@evenhead=\@oddhead
