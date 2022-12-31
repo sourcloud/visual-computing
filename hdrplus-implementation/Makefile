@@ -10,7 +10,7 @@ run: input output
 	@docker run --rm -v "$(shell pwd)/input":/input -v "$(shell pwd)/output":/output --name hdrplus hdrplus:latest
 
 input:
-	@mkdir input
+	@mkdir "$(shell pwd)/input"
 
 output:
-	@mkdir output
+	@mkdir "$(shell pwd)/output"
