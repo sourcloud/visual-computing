@@ -133,9 +133,6 @@ levels in a single exposure. By capturing multiple exposures and combining them 
 HDR image, it is possible to extend the dynamic range and capture more detail in both the 
 highlights and shadows.
 
-\cite{Hasinoff2016Burst}
-
-
 
 %-------------------------------------------------------------------------
 \section{Related Work}
@@ -147,13 +144,32 @@ Maybe a separate section about related work \ldots
 %-------------------------------------------------------------------------
 \section{Approach}
 \label{sec:approach}
-\blindtext
+
+The classic manual approach from digital photography is to take three images of the same scene: 
+One overexposed, one underexposed, and one normally exposed. These are superimposed in 
+post-processing so that the bright areas of the resulting image are not too bright and the 
+dark areas are not too dark. This results in an image that not only contains many bright areas, 
+but also many dark areas at the same time.
+
+This classical approach will be contrasted with the method described in \ref{sec:related_work}. 
+For this purpose, image bursts of the same scene are processed once according to the 
+classical method and once according to the method described in \ref{sec:related_work}. To get a good 
+comparison, images of stationary and moving objects are taken, both from a tripod and 
+handheld.
 
 
 %-------------------------------------------------------------------------
 \section{Experiments}
 \label{sec:Experiments}
-\blindtext
+\cite{Brooks2016git} has implemented the image processing pipeline described in \ref*{sec:related_work}. To do this, 
+he uses Halide, a programming language embedded in C++ that allows efficient image processing 
+pipelines to be implemented with little effort. Halide itself requires LLVM to compile. 
+Unfortunately, the project has not been actively maintained for quite some time and 
+since new versions of Halide and LLVM have been released in the meantime, some of which were 
+not backwards compatible, the project could not be compiled out of the box. After many hours of 
+trial and error, the project was able to compile with version 10 of both Halide and LLVM. 
+To get a reproducible executable version of \cite{Brooks2016git}, a Docker image was created that 
+contains the application and runs it on container startup.
 
 
 %-------------------------------------------------------------------------
