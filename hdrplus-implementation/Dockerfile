@@ -42,14 +42,14 @@ RUN git clone --depth 1 --branch v10.0.0 https://github.com/halide/Halide.git &&
 	cd Halide && \
 	cmake -G Ninja -S . -B build && \
 	cmake --build ./build && \
-	cmake --install ./build --prefix /usr/bin/local/halide
+	cmake --install ./build --prefix /usr/local/bin/halide
 
 # Clone the hdrplus repository and build
 RUN git clone --branch master https://github.com/timothybrooks/hdr-plus.git && \
 	cd hdr-plus && \
 	mkdir build && \
 	cd build && \
-	cmake -DHALIDE_DISTRIB_DIR=/usr/bin/local/halide .. && \
+	cmake -DHALIDE_DISTRIB_DIR=/usr/local/bin/halide .. && \
 	make -j$(nproc)
 
 # Use clean image with compiled binary
@@ -63,6 +63,7 @@ RUN apt-get update && apt-get install -y \
 	libtiff-dev
 
 COPY --from=builder /hdr-plus/build /hdr-plus
-COPY --from=builder /usr/bin/local/halide/lib/libHalide.so.10 /usr/bin/local/halide/lib/libHalide.so.10 
+COPY --from=builder /usr/local/bin/halide/lib/libHalide.so.10 /usr/local/bin/halide/lib/libHalide.so.10 
+COPY ./resources/process.sh /usr/local/bin/process.sh
 
-ENTRYPOINT ["/bin/bash", "-c", "./hdr-plus/hdrplus . output/output.jpg input/*"]
+ENTRYPOINT ["bash", "/usr/local/bin/process.sh"]

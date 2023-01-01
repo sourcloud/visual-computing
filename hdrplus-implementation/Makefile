@@ -6,11 +6,8 @@ help:
 build:
 	@docker build -t hdrplus .
 
-run: input output
-	@docker run --rm -v "$(shell pwd)/input":/input -v "$(shell pwd)/output":/output --name hdrplus hdrplus:latest
+run: bursts
+	@docker run --rm -v "$(shell pwd)/bursts":/bursts --name hdrplus hdrplus:latest
 
-input:
-	@mkdir "$(shell pwd)/input"
-
-output:
-	@mkdir "$(shell pwd)/output"
+bursts:
+	@mkdir "$(shell pwd)/bursts"
