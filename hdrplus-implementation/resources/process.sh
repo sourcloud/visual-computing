@@ -31,8 +31,24 @@ do
     # Ignore burst directories that have already been processed
     if [ -d "$burstdir" ] && [ ! -f "$burstdir/$OUTFILE" ]
     then
-        logfile="$burstdir/$(date '+%F_%T').log"
-        ./hdr-plus/hdrplus "." "$burstdir/$OUTFILE" "$burstdir"/@(*.RAW|*.raw|*.ARW|*.arw|*.DNG|*.dng) > "$logfile" 2>&1 &
+
+        logdir="$burstdir/logs"
+        logfile="$logdir/$(date '+%F_%T').log"
+        configfile="$burstdir/hdrplus.config"
+    
+        # Ensure log directory exists (modify permissions to be able to delete it from without the container!)
+        [ -d "$logdir" ] || mkdir "$logdir" && chmod 0777 "$logdir"
+
+        flags=""
+
+        # Set flags according to configuration file if present
+        if [ -f "$configfile" ]
+        then
+            cat "$configfile" >> "$logfile"
+            eval $(cat "$configfile" | xargs)
+            [ ! -z ${GAIN+x} ] && flags="$flags -g $GAIN" && [ ! -z ${COMPRESSION+x} ] && flags="$flags -c $COMPRESSION"
+        fi
+        ./hdr-plus/hdrplus $flags "." "$burstdir/$OUTFILE" "$burstdir"/@(*.RAW|*.raw|*.ARW|*.arw|*.DNG|*.dng) >> "$logfile" 2>&1 &
     fi
 done
 
