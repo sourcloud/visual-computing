@@ -18,7 +18,7 @@ then
 fi
 
 INPUT_DIR=/bursts
-OUTFILE=output.jpg
+OUTFILE=output.png
 
 # Enable extended globbing to be able to only 
 # use RAW files as arguments for hdrplus 
