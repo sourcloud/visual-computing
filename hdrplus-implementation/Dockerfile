@@ -66,4 +66,6 @@ COPY --from=builder /hdr-plus/build /hdr-plus
 COPY --from=builder /usr/local/bin/halide/lib/libHalide.so.10 /usr/local/bin/halide/lib/libHalide.so.10 
 COPY ./resources/process.sh /usr/local/bin/process.sh
 
-ENTRYPOINT ["bash", "/usr/local/bin/process.sh"]
+RUN ln -s /hdr-plus/hdrplus /usr/local/bin/hdrplus
+
+ENTRYPOINT ["sh", "/usr/local/bin/process.sh"]
