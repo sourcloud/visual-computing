@@ -92,10 +92,16 @@
 % uncomment for using teaser (comment if you don't want a teaser)
 \teaser{
     \hspace{\fill}
-    \includegraphics[width=0.9\linewidth]{images/ModelbasedTrackingExample.png}
+    \includegraphics[width=0.9\linewidth]{images/teaser.png}
     \hspace{\fill}
     \centering
-    \caption{Best teaser image you can provide \ldots}
+    \caption{
+      Left images: Sample from a image burst captured with a Sony Alpha A6000 camera
+                   with focal length $18mm$, shutter speed $1/50s$, ISO $400$ 
+                   and aperture $f/4.0$ in a low light situation.
+      Right image: Processed burst images with settings gain $g = 1.2$ and dynamic 
+                   range compression $c = 3.0$.
+    }
     \label{fig:teaser}
 }
 
@@ -196,7 +202,7 @@ in \cite{Hasinoff2016burst}. In brief, the steps are as follows:
 \begin{enumerate}
     \item Burst capture: A sequence of raw images is captured. In contrast to the classic 
           multi-exposure approach, each image will be underexposed and all images have the
-          same exposure. An image bursts consists of two to eight single images.
+          same exposure. An image burst consists of two to eight single images.
     \item Image alignment: The sharpest image of the first three images in the burst is 
           selected as reference image and the remaining images in the burst are aligned 
           to it. This corrects for any movement or misalignment between frames.
@@ -209,7 +215,6 @@ in \cite{Hasinoff2016burst}. In brief, the steps are as follows:
           \textit{exposure fusion} was used, which blends together the best parts of
           differently exposed images. As there is only one merged image left, the ones 
           to blend are created synthetically from the merged image.
-
 \end{enumerate}
 
 
@@ -265,6 +270,72 @@ with the Docker container, in parallel. \Cref{fig:architecture} shows the archit
       \item Show fails
 \end{itemize} 
 
+\subsection{Noisy low light situations}
+
+\begin{figure}
+      \hspace{\fill}
+      \includegraphics[width=0.9\linewidth]{images/noise.png}
+      \hspace{\fill}
+      \centering
+      \caption{
+            Left images: Noisy low light sample from bursts provided by the supplemental dataset
+            to \cite{Hasinoff2016burst}. Top row shows full image while bottom shows zoom in noisy
+            area.
+            Right images: Processed burst images with settings gain $g=1.0$ and dynamic 
+            range compression $c=2.5$.
+      }
+      \label{fig:noise}
+\end{figure}
+
+To find out how the HDR+ implementation handles images containing high noise, several 
+image bursts with high noise were processed. As can be seen in \cref{fig:noise}, the noise was 
+removed very well in all examples. Even when zooming in, hardly any noise is visible 
+compared to the original image.  The results were all obtained with the same starting 
+parameters and were satisfactory throughout.
+
+
+
+\subsection{Low contrast or dynamic range situations}
+
+\begin{figure}
+      \hspace{\fill}
+      \includegraphics[width=0.9\linewidth]{images/contrast_burst.png}
+      \hspace{\fill}
+      \centering
+      \caption{
+            Left images: Low contrast sample from bursts provided by the supplemental dataset
+            to \cite{Hasinoff2016burst}.
+            Right images: Processed burst images with settings gain g and dynamic 
+            range compression c from top to bottom image: $g=1.0$, $c=2.5$ | $g=1.0$, $c=1.5$ | $g=1.0$, $c=1.5$.
+      }
+      \label{fig:contrast}
+\end{figure}
+
+\cref{fig:contrast}
+
+\subsection{Moving objects}
+
+\begin{figure*}
+      \hspace{\fill}
+      \includegraphics[width=0.9\linewidth]{images/moving_burst.png}
+      \hspace{\fill}
+      \centering
+      \caption{Low light image capture of moving objects}
+      \label{fig:moving}
+\end{figure*}
+
+\begin{figure}
+      \hspace{\fill}
+      \includegraphics[width=0.9\linewidth]{images/ghosting.png}
+      \hspace{\fill}
+      \centering
+      \caption{Detail of \cref{fig:moving} showing ghosting }
+      \label{fig:ghosting}
+\end{figure}
+
+\cref{fig:moving}
+\cref{fig:ghosting}
+
 %-------------------------------------------------------------------------
 \section{Conclusions}
 
@@ -305,8 +376,7 @@ with the Docker container, in parallel. \Cref{fig:architecture} shows the archit
 \label{sec:acknowledgements}
 \begin{itemize}
       \item Cat
-      \item Elementary school teacher
-      \item Ex girlfriend
+      \item Elementary school teacher5
       \item Random dude at the bar who bought a round
 \end{itemize}
 
