@@ -99,7 +99,7 @@
       Left images: Sample from a image burst captured with a Sony Alpha A6000 camera
                    with focal length $18mm$, shutter speed $1/50s$, ISO $400$ 
                    and aperture $f/4.0$ in a low light situation.
-      Right image: Processed burst images with settings gain $g = 1.2$ and dynamic 
+      Right image: Processed image burst with settings gain $g = 1.2$ and dynamic 
                    range compression $c = 3.0$.
     }
     \label{fig:teaser}
@@ -112,8 +112,18 @@
 
 %-------------------------------------------------------------------------
 \begin{abstract}
-Some informative abstract \ldots
-\blindtext
+Compared to cameras built specifically for photography, cameras used in smartphones 
+suffer from constructional limitations that restrict image quality, such as smaller 
+sensors and pixels, shorter focal lengths and smaller apertures. To compensate for 
+these limitations, techniques from computational photography are used, whereby many 
+current improvements are based on the processing of several similar images of the same 
+scene - so-called image bursts. In the course of this work, an existing implementation 
+of a burst processing pipeline was examined more closely and applied to example bursts 
+from mobile and DSLR cameras. In order to enable as many people as possible to 
+experiment with this implementation, it was adapted in such a way that it can be 
+used platform-independently. Even if performance and operation are not sufficient 
+to be used in a business context, it is suitable for an introduction to and initial 
+experimentation with burst processing.
 \end{abstract}  
 
 
@@ -135,13 +145,17 @@ resulting in more detail and a more realistic representation of the scene.
 
 One way that burst photography and HDR techniques can be used together
 is to capture a series of photographs with different exposures in a burst, and then combine 
-the exposures into a single HDR image using software. This can be particularly useful in 
-low-light situations, where the camera may struggle to capture a wide range of luminance 
-levels in a single exposure. By capturing multiple exposures and combining them into an 
+the exposures into a single HDR image using software. This technique is known as 
+\textit{exposure bracketing} and is described by Mann {\&} Picard (2019) \cite{mann1994bracketing}. 
+This can be particularly useful in low-light situations, where the camera may struggle to 
+capture a wide range of luminance levels in a single exposure. By capturing multiple exposures and combining them into an 
 HDR image, it is possible to extend the dynamic range and capture more detail in both the 
 highlights and shadows.
 
-Mobile cameras can have several constraints in low light situations, including:
+According to the photo sharing community Flickr, the most 
+popular cameras among users are those built into mobile phones \cite{flickr2023popularity}. Unlike dedicated photo cameras, these have 
+some inherent disadvantages which are outlined by Delbracio et al. (2021) \cite{delbracio2021mobile}. 
+They include:
 
 \begin{itemize}
     \item Low sensitivity: Mobile cameras often have smaller sensors compared 
@@ -149,6 +163,11 @@ Mobile cameras can have several constraints in low light situations, including:
           to light. This can make it difficult to capture usable images in low l
           ight conditions without using long exposures or high ISO values, 
           which can introduce noise and other artifacts.
+
+    \item Limited zooming capability: Due to its small form factor, it is difficult to mount a lens 
+          with a highly variable focal length in front of the sensor of a cell phone.
+          Thus, they have to heavily rely on digital zoom instead of optical zoom which can lead to loss 
+          in sharpness of the zoomed in image.
     
     \item Limited dynamic range: Mobile cameras can have limited dynamic range, 
           which can make it difficult to capture both the shadow and highlight 
@@ -178,7 +197,7 @@ of mobile cameras in low light conditions. These include:
           stabilization or electronic image stabilization, can be used to reduce the 
           effects of camera shake or subject movement during long exposures.
 \end{itemize}
-    
+
 While there are still limitations to the capabilities of mobile cameras compared to larger, 
 more specialized cameras, advances in technology and image processing algorithms are 
 continually improving the quality and performance of mobile cameras in a variety of 
@@ -189,7 +208,7 @@ lighting conditions.
 \section{Related Work}
 \label{sec:related_work}
 
-The HDR+ algorithm is a computational photography technique developed by Google for use 
+The HDR+ image processing pipeline is a computational photography technique developed by Google for use 
 in the Google Pixel smartphone. It is designed to capture high dynamic range images using 
 burst photography. The algorithm uses computational techniques to extend the dynamic range 
 of the captured images, rather than relying on multiple exposures as in traditional 
@@ -197,7 +216,7 @@ HDR techniques, in which a rapid sequence of images at different exposures is ca
 The captured images are merged to create a single HDR image. The HDR+ algorithm was developed 
 to improve the quality and dynamic range of images captured on mobile devices, particularly in 
 low-light conditions. The HDR+ algorithm consists of several steps, which are outlined in detail 
-in \cite{Hasinoff2016burst}. In brief, the steps are as follows:
+by Hasinoff et al. (2016) \cite{Hasinoff2016burst}. In brief, the steps are as follows:
 
 \begin{enumerate}
     \item Burst capture: A sequence of raw images is captured. In contrast to the classic 
@@ -212,38 +231,84 @@ in \cite{Hasinoff2016burst}. In brief, the steps are as follows:
           correction, demosaicking and tone mapping. The most important operation is
           dynamic range compression which reduces the contrast between light and dark
           areas while preserving local contrast. To do so, the local tone mapping method
-          \textit{exposure fusion} was used, which blends together the best parts of
-          differently exposed images. As there is only one merged image left, the ones 
-          to blend are created synthetically from the merged image.
+          \textit{exposure fusion} described by Mertens et al. (2007) \cite{mertens2007exposure} 
+          was used, which blends together the best parts of differently exposed images. 
+          As there is only one merged image left after step 3, the ones to blend are created synthetically 
+          from the merged image.
 \end{enumerate}
 
+To increase the amount of light collected, Levoy {\&} Pritch (2018) \cite{levoy2018psl} describe 
+the positive shutter lag recording technique, which, unlike zero shutter lag, does not 
+continuously capture frames of the scene in a ring buffer, but only after the shutter button is pressed,
+which allows longer exposures of the scene. However, this recording technique is more susceptible to motion blur.
+This problem was addressed by Liba et al. (2019) \cite{liba2019handheld} who further improved the HDR+ 
+pipeline by collecting real-time motion data before the shutter button is pressed. Based on this data, the motion 
+during the shot is predicted and an appropriate exposure duration is selected. In addition, 
+they use a learning-based approach for auto-white balancing, which has been specially trained 
+for night situations.
+
+Wronski et al. (2019) \cite{Wronski2019superres} describe a super-resolution based image processing pipeline that 
+is based on burst image processing pipelines like HDR+. It utilizes the inherent micro movement of hands while
+taking pictures with a mobile device to capture multiple frames of a scene with minimal offsets. Unlike other
+image processing pipelines, their approach does not include explicit demosaicking.
+
+An approach to image burst processing based only on neural networks was developed by Dudhane et al. (2022)
+\cite{Dudhane2022restoration}. They create a set of synthetic burst features by combining information of the
+captured images and afterwards merge them in multiple steps while increasing resolution continuously. 
 
 %-------------------------------------------------------------------------
 \section{Approach}
 \label{sec:approach}
 
-\begin{itemize}
-      \item Provide more details
-      \begin{itemize}
-            \item why does the git project not work?
-            \item overall architecture
-            \item how does the script work?
-            \item folder structure
-            \item configuration
-      \end{itemize}
-\end{itemize}
+To check how the HDR+ image processing pipeline described by Hasinoff et al. (2016) \cite{Hasinoff2016burst}
+handles scenes under different lighting
+conditions, an implementation of the pipeline should be made to work and applied to
+different image bursts. The implementation used was developed by Timothy Brooks
+\cite{Brooks2016git} and published as open source project.
 
-\cite{Brooks2016git} has implemented the image processing pipeline described in \cref{sec:related_work}. To do this, 
-he uses Halide, a programming language embedded in C++ that allows efficient image processing 
-pipelines to be implemented with little effort. Halide itself requires LLVM to compile. 
-Unfortunately, the project has not been actively maintained for quite some time and 
-since new versions of Halide and LLVM have been released in the meantime, some of which were 
-not backwards compatible, the project could not be compiled out of the box. After many hours of 
-trial and error, the project was able to compile with version 10 of both Halide and LLVM. 
-To get a reproducible executable version of \cite{Brooks2016git}, a Docker image was created that 
-contains the application and runs it on container startup. To improve efficiency, a script was created 
-that starts processing all image bursts that are stored inside a bursts directory, which is shared
-with the Docker container, in parallel. \Cref{fig:architecture} shows the architecture described above.
+\subsection{Difficulties in getting the project to work}
+\label{sec:difficulties}
+
+Unfortunately, the project did neither compile out of the box 
+nor was it well documented because it was not maintained for quite some time, so I 
+needed to research which dependencies are needed to compile it.
+
+It was documented that the implementation uses Halide \cite{halide2022}, which is a programming language
+embedded in C++ that provides a higher level API to efficiently manipulate images. Halide
+itself relies on LLVM \cite{llvm2022}. But the project does not compile with the current version
+of Halide, which is version 14 at the time of writing. There was a git commit message
+that explicitly mentions Halide version 10. Halide version 10 itself did not compile with
+the current version of LLVM, which is version 14 at the time of writing. Instead it needs
+LLVM version 10. Unfortunately, the operating system I was using, Ubuntu 22.10 \cite{ubuntu2022}, 
+does not have that LLVM version in its package repository so I had to compile it myself, which took
+quite some time. 
+
+\subsection{Making the project platform independent}
+\label{sec:resolving}
+
+Since it is not user-friendly to compile the project and all its dependencies by hand and thus it 
+is also difficult to write a universal manual for different operating systems, the idea came up to 
+make it platform independent by means of containerization. Docker was chosen as the containerization 
+technology because of its prevalence and acceptance. 
+
+In a multi-step build process, a Docker image based on Ubuntu 20.10. is created that contains the 
+executable HDR+ implementation and runs it on container startup. The resulting Docker image is 
+456 MB in size and can be made available via image registries without users having to compile themselves.
+
+\subsection{Processing multiple bursts in parallel}
+\label{sec:parallel}
+
+Since the implementation is designed to process only one image burst, there is a large overhead 
+due to the necessary starting and stopping of a container. To address this issue, a shell script 
+was created that starts an image processing pipeline for each image burst in a bursts directory 
+shared between the operating system and the container when the container is started. Since the 
+implementation accepts start parameters to adjust the amount of gain and dynamic range compressen 
+applied when processing a burst, these can be set in a configuration 
+file for the burst. \Cref{fig:architecture} illustrates the architecture described beforehand. 
+The start parameters as well as the output of the processing pipeline are saved 
+in a log file, which is stored in the respective burst directory just like the result image.
+To avoid reprocessing the same image burst over and over again, all individual burst folders containing 
+a result image with default name are excluded from processing. 
 
 \begin{figure}
     \hspace{\fill}
@@ -256,21 +321,25 @@ with the Docker container, in parallel. \Cref{fig:architecture} shows the archit
 
 %-------------------------------------------------------------------------
 \section{Experiments}
-\label{sec:Experiments}
+\label{sec:experiments}
 
-\begin{itemize}
-      \item Insert images
-      \item Compare raw vs processed
-      \item Show examples for scenarios:
-      \begin{itemize}
-            \item Low light noise reduction
-            \item Improving contrast / dynamic range
-            \item Improving overall colors
-      \end{itemize}
-      \item Show fails
-\end{itemize} 
+To check how reliably the HDR+ implementation delivers good results, 
+several image bursts from different scenes were processed. The results 
+are presented in the following sections.
 
-\subsection{Noisy low light situations}
+\subsection{Low light situations}
+\label{lowlight}
+
+As a first test of the pipeline, several images of a dried flower 
+were taken in a poorly lit room in the evening. To get even darker 
+raw images, shutter speed and ISO were intentionally set lower than 
+would be appropriate for the lighting situation. After the burst was
+processed by the HDR+ implementation, a pleasing result came out. 
+In \Cref{fig:teaser}, an excerpt of the burst is compared to the result.
+
+
+\subsection{Images with high noise}
+\label{sec:noise}
 
 \begin{figure}
       \hspace{\fill}
@@ -287,15 +356,17 @@ with the Docker container, in parallel. \Cref{fig:architecture} shows the archit
       \label{fig:noise}
 \end{figure}
 
-To find out how the HDR+ implementation handles images containing high noise, several 
-image bursts with high noise were processed. As can be seen in \cref{fig:noise}, the noise was 
+To check how well the HDR+ implementation is able to handle image bursts that have high noise, several 
+images were processed. The scenes that were checked show objects and people inside enclosed 
+spaces as well as a city at night. As can be seen in \Cref{fig:noise}, the noise was 
 removed very well in all examples. Even when zooming in, hardly any noise is visible 
-compared to the original image.  The results were all obtained with the same starting 
-parameters and were satisfactory throughout.
+compared to the original image. The results were all obtained using same starting 
+parameters gain $g=1.0$ and dynamic range compression $c=2.5$ and were satisfactory throughout.
 
 
 
 \subsection{Low contrast or dynamic range situations}
+\label{sec:contrast}
 
 \begin{figure}
       \hspace{\fill}
@@ -311,75 +382,68 @@ parameters and were satisfactory throughout.
       \label{fig:contrast}
 \end{figure}
 
-\cref{fig:contrast}
+Various image bursts were processed where the raw images were very pale 
+and low in contrast. After processing, good results were obtained, showing 
+a high dynamic range. \Cref{fig:contrast} compares a sample image from the image burst 
+with the processed result, showing the difference in dynamic range. While 
+increasing the dynamic range is basically well possible, individual parameters 
+per image have to be tried out here compared to the experiments in \cref{sec:noise}, 
+which depend on the respective lighting situation. Thus, a too high gain 
+parameter can quickly lead to an overexposed and a too high dynamic range 
+compression parameter to a comic-like looking result image.
 
 \subsection{Moving objects}
+\label{sec:moving}
 
 \begin{figure*}
       \hspace{\fill}
       \includegraphics[width=0.9\linewidth]{images/moving_burst.png}
       \hspace{\fill}
       \centering
-      \caption{Low light image capture of moving objects}
+      \caption{
+            Left images: Sample from a image burst captured with a Sony Alpha A6000 camera
+            with focal length $18mm$, shutter speed $1/100s$, ISO $680$ 
+            and aperture $f/4.0$ in a low light situation with moving cars.
+            Right image: Processed image burst with settings gain $g = 1.6$ and dynamic 
+            range compression $c = 3.0$. Ghosting is clearly visible when looking at the 
+            fast moving white car in the bottom but not when looking at the slower cars
+            in the top.
+      }
       \label{fig:moving}
 \end{figure*}
 
-\begin{figure}
-      \hspace{\fill}
-      \includegraphics[width=0.9\linewidth]{images/ghosting.png}
-      \hspace{\fill}
-      \centering
-      \caption{Detail of \cref{fig:moving} showing ghosting }
-      \label{fig:ghosting}
-\end{figure}
-
-\cref{fig:moving}
-\cref{fig:ghosting}
+While small movements could be processed well, it should be investigated how to 
+process fast moving objects over a long distance. For this purpose, an image burst 
+of a road with moving cars at night was recorded, which is shown in \cref{fig:moving}. 
+Although the low light situation was basically processed satisfactorily and not 
+too fast cars could be aligned well, clear ghosting artifacts can be seen in the 
+for the very fast moving white car.
 
 %-------------------------------------------------------------------------
 \section{Conclusions}
-
-\begin{itemize}
-      \item Are there scenes that are very easy or hard to improve?
-      \item Advantages:
-      \begin{itemize}
-            \item (Revived dead open source project, yay)
-            \item Portable solution because Docker
-            \item Parallel processing of multiple bursts
-            \item Not as much work as manually editing bracketed bursts in photoshop
-      \end{itemize}
-      \item Drawbacks:
-      \begin{itemize}
-            \item Long initial compiling time when building Docker image
-            \item Overhead because Docker
-            \item Ease of use: command-line only, adjusting config by editing a file
-      \end{itemize}
-      \item Future:
-      \begin{itemize}
-            \item Use case: Photographer wanting HDR images, but does not want to spend
-                  hours in photoshop
-            \item Providing GUI:
-            \begin{itemize}
-                  \item Hide docker and script execution for non-nerdy users
-                  \item Select burst folders to processes
-                  \item Adjust gain and compress parameters by slider per folder
-                  \item Start processing of selected folders via button click
-                  \item Show result images when finished
-            \end{itemize}
-      \end{itemize}
-\end{itemize}
 \label{sec:conclusion}
 
+By containerizing Brooks' \cite{Brooks2016git} open source project, it is possible 
+to process multiple raw image bursts simultaneously with the HDR+ 
+image processing pipeline, independent of the host operating system. Users no 
+longer need to compile the application themselves and worry about dependencies, 
+but could simply pull the Docker image from an image repository.
 
-%-------------------------------------------------------------------------
-\section{Acknowledgements}
-\label{sec:acknowledgements}
-\begin{itemize}
-      \item Cat
-      \item Elementary school teacher5
-      \item Random dude at the bar who bought a round
-\end{itemize}
+The results obtained from the experiments in \cref{sec:experiments} were consistently 
+satisfactory. The only challenge found is the processing of fast moving objects, as 
+ghosting effects can easily occur here. However, to achieve good results, the start parameters must be configured depending 
+on the lighting situation. Since the individual configuration file of a burst must 
+be adapted for this purpose, it can become tedious for the user to want to process
+many bursts with different lighting situations in parallel, since similar lighting 
+conditions often require similar parameters.
 
+One disadvantage of the approach followed is that running inside a container creates 
+some overhead because the container must be started first and only the CPU is used 
+to process the images by default. As a result, processing a single burst takes several seconds
+depending on size and amount of the input images, which precludes its use in time-critical scenarios. 
+It should be examined whether this is due to the specific implementation or whether the performance 
+can be improved significantly by using tools that offer GPU support in container environments 
+like NVIDIA container toolkit \cite{nvidia2015docker}.
 
 %-------------------------------------------------------------------------
 %\bibliographystyle{eg-alpha}
