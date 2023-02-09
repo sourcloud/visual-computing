@@ -143,6 +143,9 @@ in a single image, resulting in lost detail in the highlights or shadows.
 HDR techniques can be used to extend the range of luminance in an image, 
 resulting in more detail and a more realistic representation of the scene.
 
+\subsection{Creating HDR images via exposure bracketing}
+\label{sec:bracketing}
+
 One way that burst photography and HDR techniques can be used together
 is to capture a series of photographs with different exposures in a burst, and then combine 
 the exposures into a single HDR image using software. This technique is known as 
@@ -152,6 +155,9 @@ capture a wide range of luminance levels in a single exposure. By capturing mult
 HDR image, it is possible to extend the dynamic range and capture more detail in both the 
 highlights and shadows.
 
+\subsection{Challenges of photography with mobile devices}
+\label{sec:challenges}
+
 According to the photo sharing community Flickr, the most 
 popular cameras among users are those built into mobile phones \cite{flickr2023popularity}. Unlike dedicated photo cameras, these have 
 some inherent disadvantages which are outlined by Delbracio et al. (2021) \cite{delbracio2021mobile}. 
@@ -160,8 +166,8 @@ They include:
 \begin{itemize}
     \item Low sensitivity: Mobile cameras often have smaller sensors compared 
           to DSLR or mirrorless cameras, which can result in lower sensitivity 
-          to light. This can make it difficult to capture usable images in low l
-          ight conditions without using long exposures or high ISO values, 
+          to light. This can make it difficult to capture usable images in low 
+          light conditions without using long exposures or high ISO values, 
           which can introduce noise and other artifacts.
 
     \item Limited zooming capability: Due to its small form factor, it is difficult to mount a lens 
@@ -181,16 +187,17 @@ They include:
           moving subjects.
 \end{itemize}
 
-To address these constraints, several techniques can be used to improve the performance 
-of mobile cameras in low light conditions. These include:
+\subsection{Addressing these challenges}
+To address the constraints mentioned in \cref{sec:challenges}, several techniques 
+from computational photography can be used to improve the quality of images captured 
+captured mobile cameras \cite{delbracio2021mobile}. These include:
 
 \begin{itemize}
     \item Noise reduction: Noise reduction algorithms can be used to reduce the noise 
-          introduced by high ISO values or long exposures. These algorithms can smooth 
+          introduced by high ISO values. These algorithms can smooth 
           out the image while preserving edges and other important details.
 
-    \item High dynamic range techniques: HDR techniques, such as burst photography 
-          and computational photography, can be used to extend the dynamic range of mobile 
+    \item High dynamic range techniques: HDR techniques, such as burst photography, can be used to extend the dynamic range of mobile 
           cameras and capture more detail in both the shadow and highlight areas of an image.
     
     \item Image stabilization: Image stabilization technologies, such as optical image 
@@ -208,6 +215,8 @@ lighting conditions.
 \section{Related Work}
 \label{sec:related_work}
 
+\subsection{HDR+ burst processing pipeline}
+\label{sec:hdrpluspipeline}
 The HDR+ image processing pipeline is a computational photography technique developed by Google for use 
 in the Google Pixel smartphone. It is designed to capture high dynamic range images using 
 burst photography. The algorithm uses computational techniques to extend the dynamic range 
@@ -237,6 +246,9 @@ by Hasinoff et al. (2016) \cite{Hasinoff2016burst}. In brief, the steps are as f
           from the merged image.
 \end{enumerate}
 
+\subsection{Improvements and new approaches since HDR+}
+\label{sec:newerstuff}
+
 To increase the amount of light collected, Levoy {\&} Pritch (2018) \cite{levoy2018psl} describe 
 the positive shutter lag recording technique, which, unlike zero shutter lag, does not 
 continuously capture frames of the scene in a ring buffer, but only after the shutter button is pressed,
@@ -260,7 +272,7 @@ captured images and afterwards merge them in multiple steps while increasing res
 \section{Approach}
 \label{sec:approach}
 
-To check how the HDR+ image processing pipeline described by Hasinoff et al. (2016) \cite{Hasinoff2016burst}
+To check how the HDR+ image processing pipeline described in \cref{sec:hdrpluspipeline}
 handles scenes under different lighting
 conditions, an implementation of the pipeline should be made to work and applied to
 different image bursts. The implementation used was developed by Timothy Brooks
