@@ -338,33 +338,6 @@ processed by the HDR+ implementation, a pleasing result came out.
 In \Cref{fig:teaser}, an excerpt of the burst is compared to the result.
 
 
-\subsection{Images with high noise}
-\label{sec:noise}
-
-\begin{figure}
-      \hspace{\fill}
-      \includegraphics[width=0.9\linewidth]{images/noise.png}
-      \hspace{\fill}
-      \centering
-      \caption{
-            Left images: Noisy low light sample from bursts provided by the supplemental dataset
-            to \cite{Hasinoff2016burst}. Top row shows full image while bottom shows zoom in noisy
-            area.
-            Right images: Processed burst images with settings gain $g=1.0$ and dynamic 
-            range compression $c=2.5$.
-      }
-      \label{fig:noise}
-\end{figure}
-
-To check how well the HDR+ implementation is able to handle image bursts that have high noise, several 
-images were processed. The scenes that were checked show objects and people inside enclosed 
-spaces as well as a city at night. As can be seen in \Cref{fig:noise}, the noise was 
-removed very well in all examples. Even when zooming in, hardly any noise is visible 
-compared to the original image. The results were all obtained using same starting 
-parameters gain $g=1.0$ and dynamic range compression $c=2.5$ and were satisfactory throughout.
-
-
-
 \subsection{Low contrast or dynamic range situations}
 \label{sec:contrast}
 
@@ -392,6 +365,32 @@ which depend on the respective lighting situation. Thus, a too high gain
 parameter can quickly lead to an overexposed and a too high dynamic range 
 compression parameter to a comic-like looking result image.
 
+
+\subsection{Images with high noise}
+\label{sec:noise}
+
+\begin{figure}
+      \hspace{\fill}
+      \includegraphics[width=0.8\linewidth]{images/noise.png}
+      \hspace{\fill}
+      \centering
+      \caption{
+            Left images: Noisy low light sample from bursts provided by the supplemental dataset
+            to \cite{Hasinoff2016burst}. Top row shows full image while bottom shows zoom in noisy
+            area.
+            Right images: Processed burst images with settings gain $g=1.0$ and dynamic 
+            range compression $c=2.5$.
+      }
+      \label{fig:noise}
+\end{figure}
+
+To check how well the HDR+ implementation is able to handle image bursts that have high noise, several 
+images were processed. The scenes that were checked show objects and people inside enclosed 
+spaces as well as a city at night. As can be seen in \Cref{fig:noise}, the noise was 
+removed very well in all examples. Even when zooming in, hardly any noise is visible 
+compared to the original image. The results were all obtained using same starting 
+parameters gain $g=1.0$ and dynamic range compression $c=2.5$ and were satisfactory throughout.
+
 \subsection{Moving objects}
 \label{sec:moving}
 
@@ -414,7 +413,7 @@ compression parameter to a comic-like looking result image.
 
 While small movements could be processed well, it should be investigated how to 
 process fast moving objects over a long distance. For this purpose, an image burst 
-of a road with moving cars at night was recorded, which is shown in \cref{fig:moving}. 
+of a road with moving cars at night was recorded, which is shown in \Cref{fig:moving}. 
 Although the low light situation was basically processed satisfactorily and not 
 too fast cars could be aligned well, clear ghosting artifacts can be seen in the 
 for the very fast moving white car.
@@ -444,6 +443,13 @@ depending on size and amount of the input images, which precludes its use in tim
 It should be examined whether this is due to the specific implementation or whether the performance 
 can be improved significantly by using tools that offer GPU support in container environments 
 like NVIDIA container toolkit \cite{nvidia2015docker}.
+
+In a next step, the results could be compared with those of a more up-to-date burst processing 
+pipeline in terms of image quality and performance. A suitable candidate would be the neural 
+network-based approach presented by Dudhane et al. (2022) \cite{Dudhane2022restoration}, 
+as the individual steps of this pipeline are fundamentally different from those of the 
+HDR+ pipeline and the authors make their source code available in an open source project
+\cite{Dudhane2022git}.
 
 %-------------------------------------------------------------------------
 %\bibliographystyle{eg-alpha}
